@@ -4,16 +4,45 @@ import java.math.BigDecimal;
 import java.util.Scanner;
 
 public class Main {
+	public static Scanner sc = new Scanner(System.in);
+	public static ProgrammaEventi programmaEventi = null;
+	
 	public static void main(String[] args) {
-		Scanner sc = new Scanner(System.in);
 		
+		System.out.print("Enter the events program's title: ");
+		String eventsProgrammTitle = sc.nextLine();
+		
+		programmaEventi = new ProgrammaEventi(eventsProgrammTitle);
+		
+		byte choice = 0;
+		
+		do {
+			System.out.print("You want to insert:\n"
+					+ "[1] Generic event\n"
+					+ "[2] Concert\n"
+					+ "[0] Nothing"
+					);
+			choice = Byte.valueOf(sc.nextLine());
+			
+			if (choice == 1)
+				insertGenericEvent();
+			else if (choice == 2)
+				insertConcert();
+		} while (choice != 0);
+		
+		sc.close();
+		
+		System.out.println(programmaEventi);
+	}
+	
+	public static void insertGenericEvent() {
 //		--------------------------------------------------------------------
 //		GENERAL EVENTO SECTION
 //		--------------------------------------------------------------------
 		
 		Evento evento = null;
 		
-		System.out.print("Enter the event's title: ");
+		System.out.print("\nEnter the event's title: ");
 		String title = sc.nextLine();
 		
 		System.out.print("\nEnter the event's date in the format 'dd-mm-yyyy': ");
@@ -24,6 +53,8 @@ public class Main {
 			int totalPlaces = Integer.valueOf(sc.nextLine());
 		
 			evento = new Evento(title, date, totalPlaces);
+			
+			programmaEventi.addEvent(evento);
 		} catch (Exception e) {
 			System.err.println(e.getMessage());
 		}
@@ -87,14 +118,16 @@ public class Main {
 			System.err.println("\nNo more available places");
 		else
 			System.err.println("\nYou reserved a total of " + reservedPlaces + " places");
-		
+	}
+	
+	public static void insertConcert() {
 //		--------------------------------------------------------------------
 //		CONCERTO SECTION
 //		--------------------------------------------------------------------
 		
 		Concerto concerto = null;
 		
-		System.out.print("Enter the concert's title: ");
+		System.out.print("\nEnter the concert's title: ");
 		String concertTitle = sc.nextLine();
 		
 		System.out.print("\nEnter the concert's date in the format 'dd-mm-yyyy': ");
@@ -111,12 +144,12 @@ public class Main {
 			BigDecimal concertPrice = new BigDecimal(sc.nextLine());
 		
 			concerto = new Concerto(concertTitle, concertDate, concertTotalPlaces, concertTime, concertPrice);
+			
+			programmaEventi.addEvent(concerto);
 		} catch (Exception e) {
 			System.err.println(e.getMessage());
 		}
 		
-		System.out.println("\nYou just created the following concert: \n----------\n" + concerto + "\n----------");
-		
-		sc.close();
+		System.out.println("\nYou just created the following concert: \n----------\n" + concerto + "\n----------");	
 	}
 }

@@ -2,7 +2,7 @@ package org.java.events;
 
 import java.time.LocalDate;
 
-public class Evento {
+public class Evento extends DateConverter {
 	private String title;
 	private LocalDate date;
 	private int totalPlaces;
@@ -28,7 +28,7 @@ public class Evento {
 	}
 	
 	public void setDate(String date) throws Exception {
-		LocalDate tempDate = convertInputDate(date);
+		LocalDate tempDate = getConvertedInputDate(date);
 		
 		if (tempDate.isBefore(LocalDate.now()))
 			throw new Exception("The date can't be in the past");
@@ -67,23 +67,7 @@ public class Evento {
 	}
 	
 	public void remove(int places) {
-		
-		
 		setReservedPlaces(getReservedPlaces() - places);
-	}
-	
-	private LocalDate convertInputDate(String date) throws Exception {
-		short[] dateContainer = new short[3];
-		
-//		USING try / catch TO ALSO CATCH ERRORS ON Short.valueOf STATEMENTS
-		try {
-			dateContainer[0] = Short.valueOf(date.substring(0, date.indexOf("-")));
-			dateContainer[1] = Short.valueOf(date.substring(date.indexOf("-") + 1, date.lastIndexOf("-")));
-			dateContainer[2] = Short.valueOf(date.substring(date.lastIndexOf("-") + 1));			
-			return LocalDate.of(dateContainer[2], dateContainer[1], dateContainer[0]);
-		} catch (Exception e) {
-			throw new Exception("Insert a valid date");
-		}		
 	}
 	
 	protected String getFormattedDateForOutput() {
