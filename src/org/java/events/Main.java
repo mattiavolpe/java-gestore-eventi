@@ -11,27 +11,39 @@ public class Main {
 //		--------------------------------------------------------------------
 //		HARD-CODED TEST
 //		--------------------------------------------------------------------
+		System.out.println("\n********************\n");
+		System.out.println("HARD-CODED TEST");
+		
 		programmaEventi = new ProgrammaEventi("Default test program title");
 		
-//		ADD 3 EVENTS
+//		ADD EVENTS
 		try {
 			programmaEventi.addEvent(new Evento("Evento test 1", "03-10-2024", 30));
-			programmaEventi.addEvent(new Concerto("Concerto test", "12-12-2030", 60000, "03:12", BigDecimal.valueOf(70.50)));
+			programmaEventi.addEvent(new Concerto("Concerto test 1", "12-12-2030", 60000, "03:12", BigDecimal.valueOf(70.50)));
 			programmaEventi.addEvent(new Evento("Evento test 2", "01-01-2024", 60));
+			programmaEventi.addEvent(new Spettacolo("Spettacolo test 1", "25-06-2024", 500, BigDecimal.valueOf(40)));
+			programmaEventi.addEvent(new Evento("Evento test 3", "01-07-2028", 45));
+			programmaEventi.addEvent(new Evento("Evento test 4", "02-01-2024", 89));
+			programmaEventi.addEvent(new Spettacolo("Spettacolo test 2", "25-08-2027", 5000, BigDecimal.valueOf(400)));
+			programmaEventi.addEvent(new Concerto("Concerto test 2", "12-12-2035", 30000, "21:45", BigDecimal.valueOf(700.50)));
 		} catch (Exception e) {
 			System.err.println(e.getMessage());
 		}
 		
+		System.out.println("\nGeneric average price: " + String.format("%.02f", programmaEventi.avgEventsPrice()) + "€");
+		System.out.println("Concerts average price: " + String.format("%.02f", programmaEventi.avgConcertsPrice()) + "€");
+		System.out.println("Shows average price: " + String.format("%.02f", programmaEventi.avgShowsPrice()) + "€");
+		
 //		LOOK FOR A DATE
 		try {
-			System.out.println(programmaEventi.eventsAtDate("12-12-2030"));
+			System.out.print(programmaEventi.eventsAtDate("12-12-2030"));
 		} catch (Exception e) {
 			System.err.println(e.getMessage());
 		}
 		System.out.println("----------");
 		
 //		COUNTS THE EVENTS
-		System.out.println(programmaEventi.countEvents());
+		System.out.println("Count: " + programmaEventi.countEvents());
 		System.out.println("----------");
 		
 //		SHOWS THE EVENT'S PROGRAM
@@ -40,9 +52,11 @@ public class Main {
 		
 //		CLEARS THE LIST
 		programmaEventi.clearList();
-		System.out.println(programmaEventi);
+		System.out.println("Cleared list: " + programmaEventi);
 		System.out.println("----------");
 		
+		System.out.println("END OF THE HARD-CODED TEST");
+		System.out.println("\n********************\n");
 //		--------------------------------------------------------------------
 //		END OF HARD-CODED TEST
 //		--------------------------------------------------------------------
@@ -60,6 +74,7 @@ public class Main {
 			System.out.println("\nYou want to insert:\n"
 					+ "[1] Generic event\n"
 					+ "[2] Concert\n"
+					+ "[3] Show\n"
 					+ "[0] Nothing"
 					);
 			
@@ -73,6 +88,8 @@ public class Main {
 				insertGenericEvent();
 			else if (choice == 2)
 				insertConcert();
+			else if (choice == 3)
+				insertShow();
 		} while (choice != 0);
 		
 		sc.close();
@@ -139,6 +156,37 @@ public class Main {
 			System.out.println("\nYou just created the following concert: \n----------\n" + concerto + "\n----------");
 		
 			lookForReservation(concerto);
+		}
+	}
+	
+	public static void insertShow() {
+
+		Spettacolo spettacolo = null;
+		
+		System.out.print("\nEnter the show's title: ");
+		String showTitle = sc.nextLine();
+		
+		System.out.print("\nEnter the show's date in the format 'dd-mm-yyyy': ");
+		String showDate = sc.nextLine();
+		
+		try {
+			System.out.print("\nEnter the show's total places number: ");
+			int showTotalPlaces = Integer.valueOf(sc.nextLine());
+			
+			System.out.print("\nEnter the show's price: ");
+			BigDecimal showPrice = new BigDecimal(sc.nextLine());
+		
+			spettacolo = new Spettacolo(showTitle, showDate, showTotalPlaces, showPrice);
+			
+			programmaEventi.addEvent(spettacolo);
+		} catch (Exception e) {
+			System.err.println(e.getMessage());
+		}
+		
+		if (spettacolo != null) {
+			System.out.println("\nYou just created the following show: \n----------\n" + spettacolo + "\n----------");
+		
+			lookForReservation(spettacolo);
 		}
 	}
 	

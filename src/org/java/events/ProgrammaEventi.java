@@ -1,9 +1,11 @@
 package org.java.events;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class ProgrammaEventi extends DateConverter {
 	private String title;
@@ -26,16 +28,16 @@ public class ProgrammaEventi extends DateConverter {
 		events.add(event);
 	}
 	
-	public List<Evento> eventsAtDate(String date) throws Exception {		
+	public String eventsAtDate(String date) throws Exception {		
 		try {
 			LocalDate targetDate = getConvertedInputDate(date);
 			List<Evento> eventsAtGivenDate = events.stream().filter(event -> targetDate.isEqual(event.getDate())).toList();
-			return eventsAtGivenDate;
+			return this.toString(eventsAtGivenDate);
 		} catch (Exception e) {
 			System.err.println(e.getMessage());
 		}
 		
-		return events;
+		return "";
 	}
 	
 	public int countEvents() {
@@ -44,6 +46,55 @@ public class ProgrammaEventi extends DateConverter {
 	
 	public void clearList() {
 		events.clear();
+	}
+	
+	public BigDecimal avgEventsPrice() {
+		AtomicReference<BigDecimal> counter = new AtomicReference<>(BigDecimal.ZERO);
+		AtomicReference<BigDecimal> avg = new AtomicReference<>(BigDecimal.ZERO);
+		
+		events.forEach(event -> {
+			if (event instanceof Concerto) {
+				Concerto concert = (Concerto) event;
+				avg.updateAndGet(oldAvg -> oldAvg.add(concert.getPrice()));
+				counter.updateAndGet(oldCounter -> oldCounter.add(new BigDecimal(1)));
+			} else if (event instanceof Spettacolo) {
+				Spettacolo show = (Spettacolo) event;
+				avg.updateAndGet(oldAvg -> oldAvg.add(show.getPrice()));
+				counter.updateAndGet(oldCounter -> oldCounter.add(new BigDecimal(1)));
+			}
+		});
+		
+		return avg.updateAndGet(oldAvg -> oldAvg.divide(counter.get()));
+	}
+	
+	public BigDecimal avgConcertsPrice() {
+		AtomicReference<BigDecimal> counter = new AtomicReference<>(BigDecimal.ZERO);
+		AtomicReference<BigDecimal> avg = new AtomicReference<>(BigDecimal.ZERO);
+		
+		events.forEach(event -> {
+			if (event instanceof Concerto) {
+				Concerto concert = (Concerto) event;
+				avg.updateAndGet(oldAvg -> oldAvg.add(concert.getPrice()));
+				counter.updateAndGet(oldCounter -> oldCounter.add(new BigDecimal(1)));
+			}
+		});
+		
+		return avg.updateAndGet(oldAvg -> oldAvg.divide(counter.get()));
+	}
+	
+	public BigDecimal avgShowsPrice() {
+		AtomicReference<BigDecimal> counter = new AtomicReference<>(BigDecimal.ZERO);
+		AtomicReference<BigDecimal> avg = new AtomicReference<>(BigDecimal.ZERO);
+		
+		events.forEach(event -> {
+			if (event instanceof Spettacolo) {
+				Spettacolo show = (Spettacolo) event;
+				avg.updateAndGet(oldAvg -> oldAvg.add(show.getPrice()));
+				counter.updateAndGet(oldCounter -> oldCounter.add(new BigDecimal(1)));
+			}
+		});
+		
+		return avg.updateAndGet(oldAvg -> oldAvg.divide(counter.get()));
 	}
 	
 	@Override
@@ -61,6 +112,24 @@ public class ProgrammaEventi extends DateConverter {
 		
 		if (countEvents() == 0)
 			eventsResume += "No events in the program";
+		
+		return eventsResume;
+	}
+	
+	public String toString(List<Evento> eventsAtDate) {
+		List<Evento> orderedEventsAtDate = eventsAtDate.stream().sorted((eventA, eventB) -> eventA.getDate().compareTo(eventB.getDate())).toList();
+		Iterator<Evento> orderedEventsAtDateIterator = orderedEventsAtDate.iterator();
+		String eventsResume = "\n----------\n"
+				+ "Events found for the date:\n"
+				+ "----------\n";
+		
+		while (orderedEventsAtDateIterator.hasNext()) {
+			Evento event = orderedEventsAtDateIterator.next();
+			eventsResume += event.getFormattedDateForOutput() + " - " + event.getTitle() + "\n";
+		}
+		
+		if (eventsAtDate.size() == 0)
+			eventsResume += "No events found for the date";
 		
 		return eventsResume;
 	}
