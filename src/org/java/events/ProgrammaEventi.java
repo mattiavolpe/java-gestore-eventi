@@ -48,11 +48,16 @@ public class ProgrammaEventi extends DateConverter {
 	
 	@Override
 	public String toString() {
-		Iterator<Evento> eventsIterator = events.iterator();
-		String eventsResume = "";
+		List<Evento> orderedEvents = events.stream().sorted((eventA, eventB) -> eventA.getDate().compareTo(eventB.getDate())).toList();
+		Iterator<Evento> orderedEventsIterator = orderedEvents.iterator();
+		String eventsResume = "\n----------\n"
+				+ "Events program's RESUME:\n"
+				+ "----------\n";
 		
-		while (eventsIterator.hasNext())
-			eventsResume += eventsIterator.next().toString() + "\n";			
+		while (orderedEventsIterator.hasNext()) {
+			Evento event = orderedEventsIterator.next();
+			eventsResume += event.getFormattedDateForOutput() + " - " + event.getTitle() + "\n";
+		}
 		
 		return eventsResume;
 	}

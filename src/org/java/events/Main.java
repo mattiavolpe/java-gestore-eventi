@@ -9,20 +9,27 @@ public class Main {
 	
 	public static void main(String[] args) {
 		
+		String eventsProgrammTitle = "Default program title";
+		
 		System.out.print("Enter the events program's title: ");
-		String eventsProgrammTitle = sc.nextLine();
+		eventsProgrammTitle = sc.nextLine();
 		
 		programmaEventi = new ProgrammaEventi(eventsProgrammTitle);
 		
 		byte choice = 0;
 		
 		do {
-			System.out.print("You want to insert:\n"
+			System.out.println("\nYou want to insert:\n"
 					+ "[1] Generic event\n"
 					+ "[2] Concert\n"
 					+ "[0] Nothing"
 					);
-			choice = Byte.valueOf(sc.nextLine());
+			
+			try {
+				choice = Byte.valueOf(sc.nextLine());				
+			} catch (Exception e) {
+				System.err.println("Enter a valid number");
+			}
 			
 			if (choice == 1)
 				insertGenericEvent();
@@ -59,65 +66,11 @@ public class Main {
 			System.err.println(e.getMessage());
 		}
 		
-		System.out.println("\nYou just created the following event: \n----------\n" + evento + "\n----------");
-		
-		int placesToReserve = 0;
-		int reservedPlaces = 0;
-		
-		do {
-			try {
-				System.out.print("\nEnter the number of places you want to RESERVE (enter 0 if you don't want to make a reservation): ");
-				placesToReserve = Integer.valueOf(sc.nextLine());
-				
-				if (placesToReserve < 0)
-					System.err.println("You can't reserve less than 1 place");
-				else if (placesToReserve > 0) {
-					evento.reserve(placesToReserve);
-					reservedPlaces += placesToReserve;
-					
-					System.err.println("\nYou reserved a total of " + reservedPlaces + " places");
-					System.err.println("Still " + (evento.getTotalPlaces() - evento.getReservedPlaces()) + " places available");
-				}
-			} catch (Exception e) {
-				System.err.println(e.getMessage());
-			}
-		} while (placesToReserve != 0 && (evento.getTotalPlaces() - evento.getReservedPlaces() > 0));
-		
-		if (placesToReserve != 0)
-			System.err.println("\nNo more available places to reserve");
-		else
-			System.err.println("\nYou reserved a total of " + reservedPlaces + " places");
-		
-		int placesToRemove = 0;
-		
-		do {
-			if (reservedPlaces > 0) {
-				try {
-					System.out.print("\nEnter the number of places you want to REMOVE (enter 0 if you don't want to remove any place): ");
-					placesToRemove = Integer.valueOf(sc.nextLine());
-					
-					if (placesToRemove < 0)
-						System.err.println("You can't remove less than 1 place");
-					else if (placesToRemove > 0 && reservedPlaces >= placesToRemove) {
-						evento.remove(placesToRemove);
-						reservedPlaces -= placesToRemove;
-						
-						System.err.println("\nYou successfully removed " + placesToRemove + " places");
-						System.err.println("\nYou still have a total of " + reservedPlaces + " places");
-						System.err.println("Still " + (evento.getTotalPlaces() - evento.getReservedPlaces()) + " places available");
-					} else if (placesToRemove > 0){
-						System.err.println("\nYou tried to remove " + placesToRemove + " places, but you only have " + reservedPlaces + " places still reserved");
-					}
-				} catch (Exception e) {
-					System.err.println(e.getMessage());
-				}
-			}
-		} while (placesToRemove != 0 && reservedPlaces > 0);
-		
-		if (placesToRemove != 0)
-			System.err.println("\nNo more available places");
-		else
-			System.err.println("\nYou reserved a total of " + reservedPlaces + " places");
+		if (evento != null) {
+			System.out.println("\nYou just created the following event: \n----------\n" + evento + "\n----------");
+			
+			lookForReservation(evento);			
+		}
 	}
 	
 	public static void insertConcert() {
@@ -150,6 +103,70 @@ public class Main {
 			System.err.println(e.getMessage());
 		}
 		
-		System.out.println("\nYou just created the following concert: \n----------\n" + concerto + "\n----------");	
+		if (concerto != null) {
+			System.out.println("\nYou just created the following concert: \n----------\n" + concerto + "\n----------");
+		
+			lookForReservation(concerto);
+		}
+	}
+	
+	public static void lookForReservation(Evento event) {
+		int placesToReserve = 0;
+		int reservedPlaces = 0;
+		
+		do {
+			try {
+				System.out.print("\nEnter the number of places you want to RESERVE (enter 0 if you don't want to make a reservation): ");
+				placesToReserve = Integer.valueOf(sc.nextLine());
+				
+				if (placesToReserve < 0)
+					System.err.println("You can't reserve less than 1 place");
+				else if (placesToReserve > 0) {
+					event.reserve(placesToReserve);
+					reservedPlaces += placesToReserve;
+					
+					System.err.println("\nYou reserved a total of " + reservedPlaces + " places");
+					System.err.println("Still " + (event.getTotalPlaces() - event.getReservedPlaces()) + " places available");
+				}
+			} catch (Exception e) {
+				System.err.println(e.getMessage());
+			}
+		} while (placesToReserve != 0 && (event.getTotalPlaces() - event.getReservedPlaces() > 0));
+		
+		if (placesToReserve != 0)
+			System.err.println("\nNo more available places to reserve");
+		else
+			System.err.println("\nYou reserved a total of " + reservedPlaces + " places");
+		
+		int placesToRemove = 0;
+		
+		do {
+			if (reservedPlaces > 0) {
+				try {
+					System.out.print("\nEnter the number of places you want to REMOVE (enter 0 if you don't want to remove any place): ");
+					placesToRemove = Integer.valueOf(sc.nextLine());
+					
+					if (placesToRemove < 0)
+						System.err.println("You can't remove less than 1 place");
+					else if (placesToRemove > 0 && reservedPlaces >= placesToRemove) {
+						event.remove(placesToRemove);
+						reservedPlaces -= placesToRemove;
+						
+						System.err.println("\nYou successfully removed " + placesToRemove + " places");
+						System.err.println("\nYou still have a total of " + reservedPlaces + " places");
+						System.err.println("Still " + (event.getTotalPlaces() - event.getReservedPlaces()) + " places available");
+					} else if (placesToRemove > 0){
+						System.err.println("\nYou tried to remove " + placesToRemove + " places, but you only have " + reservedPlaces + " places still reserved");
+					}
+				} catch (Exception e) {
+					System.err.println(e.getMessage());
+				}
+			}
+		} while (placesToRemove != 0 && reservedPlaces > 0);
+		
+		if (placesToRemove != 0)
+			System.err.println("\nNo more reserved places to remove");
+		else if (reservedPlaces != 0)
+			System.err.println("\nYou reserved a total of " + reservedPlaces + " places");
 	}
 }
