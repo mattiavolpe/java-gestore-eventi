@@ -80,14 +80,13 @@ public class Evento {
 			dateContainer[0] = Short.valueOf(date.substring(0, date.indexOf("-")));
 			dateContainer[1] = Short.valueOf(date.substring(date.indexOf("-") + 1, date.lastIndexOf("-")));
 			dateContainer[2] = Short.valueOf(date.substring(date.lastIndexOf("-") + 1));			
+			return LocalDate.of(dateContainer[2], dateContainer[1], dateContainer[0]);
 		} catch (Exception e) {
 			throw new Exception("Insert a valid date");
-		}
-		
-		return LocalDate.of(dateContainer[2], dateContainer[1], dateContainer[0]);
+		}		
 	}
 	
-	private String formatDateForOutput() {
+	protected String getFormattedDateForOutput() {
 		int day = date.getDayOfMonth();
 		int month = date.getMonthValue();
 		int year = date.getYear();
@@ -96,6 +95,6 @@ public class Evento {
 	
 	@Override
 	public String toString() {
-		return formatDateForOutput() + " - " + getTitle();
+		return getFormattedDateForOutput() + " - " + getTitle();
 	}
 }
