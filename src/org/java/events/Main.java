@@ -8,13 +8,51 @@ public class Main {
 	public static ProgrammaEventi programmaEventi = null;
 	
 	public static void main(String[] args) {
+//		--------------------------------------------------------------------
+//		HARD-CODED TEST
+//		--------------------------------------------------------------------
+		programmaEventi = new ProgrammaEventi("Default test program title");
 		
-		String eventsProgrammTitle = "Default program title";
+//		ADD 3 EVENTS
+		try {
+			programmaEventi.addEvent(new Evento("Evento test 1", "03-10-2024", 30));
+			programmaEventi.addEvent(new Concerto("Concerto test", "12-12-2030", 60000, "03:12", BigDecimal.valueOf(70.50)));
+			programmaEventi.addEvent(new Evento("Evento test 2", "01-01-2024", 60));
+		} catch (Exception e) {
+			System.err.println(e.getMessage());
+		}
+		
+//		LOOK FOR A DATE
+		try {
+			System.out.println(programmaEventi.eventsAtDate("12-12-2030"));
+		} catch (Exception e) {
+			System.err.println(e.getMessage());
+		}
+		System.out.println("----------");
+		
+//		COUNTS THE EVENTS
+		System.out.println(programmaEventi.countEvents());
+		System.out.println("----------");
+		
+//		SHOWS THE EVENT'S PROGRAM
+		System.out.println(programmaEventi);
+		System.out.println("----------");
+		
+//		CLEARS THE LIST
+		programmaEventi.clearList();
+		System.out.println(programmaEventi);
+		System.out.println("----------");
+		
+//		--------------------------------------------------------------------
+//		END OF HARD-CODED TEST
+//		--------------------------------------------------------------------
+		
+		String eventsProgramTitle = "Default program title";
 		
 		System.out.print("Enter the events program's title: ");
-		eventsProgrammTitle = sc.nextLine();
+		eventsProgramTitle = sc.nextLine();
 		
-		programmaEventi = new ProgrammaEventi(eventsProgrammTitle);
+		programmaEventi = new ProgrammaEventi(eventsProgramTitle);
 		
 		byte choice = 0;
 		
@@ -43,10 +81,7 @@ public class Main {
 	}
 	
 	public static void insertGenericEvent() {
-//		--------------------------------------------------------------------
-//		GENERAL EVENTO SECTION
-//		--------------------------------------------------------------------
-		
+
 		Evento evento = null;
 		
 		System.out.print("\nEnter the event's title: ");
@@ -74,10 +109,7 @@ public class Main {
 	}
 	
 	public static void insertConcert() {
-//		--------------------------------------------------------------------
-//		CONCERTO SECTION
-//		--------------------------------------------------------------------
-		
+
 		Concerto concerto = null;
 		
 		System.out.print("\nEnter the concert's title: ");
@@ -111,6 +143,7 @@ public class Main {
 	}
 	
 	public static void lookForReservation(Evento event) {
+		
 		int placesToReserve = 0;
 		int reservedPlaces = 0;
 		

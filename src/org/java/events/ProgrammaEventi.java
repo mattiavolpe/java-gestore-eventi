@@ -59,6 +59,9 @@ public class ProgrammaEventi extends DateConverter {
 			eventsResume += event.getFormattedDateForOutput() + " - " + event.getTitle() + "\n";
 		}
 		
+		if (countEvents() == 0)
+			eventsResume += "No events in the program";
+		
 		return eventsResume;
 	}
 }
