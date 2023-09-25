@@ -53,7 +53,6 @@ public class Main {
 			System.err.println("\nYou reserved a total of " + reservedPlaces + " places");
 		
 		int placesToRemove = 0;
-		int removedPlaces = 0;
 		
 		do {
 			if (reservedPlaces > 0) {
@@ -65,7 +64,6 @@ public class Main {
 						System.err.println("You can't remove less than 1 place");
 					else if (placesToRemove > 0 && reservedPlaces >= placesToRemove) {
 						evento.remove(placesToRemove);
-						removedPlaces += placesToRemove;
 						reservedPlaces -= placesToRemove;
 						
 						System.err.println("\nYou successfully removed " + placesToRemove + " places");
