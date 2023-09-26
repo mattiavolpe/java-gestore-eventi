@@ -63,10 +63,15 @@ public class Evento extends DateConverter {
 					: "Still available places: " + (getTotalPlaces() - getReservedPlaces())
 			);
 		
+		if (getDate().isBefore(LocalDate.now()))
+			throw new Exception("The event is already past");
+		
 		setReservedPlaces(getReservedPlaces() + places);
 	}
 	
-	public void remove(int places) {
+	public void remove(int places) throws Exception {
+		if (getDate().isBefore(LocalDate.now()))
+			throw new Exception("The event is already past");
 		setReservedPlaces(getReservedPlaces() - places);
 	}
 	
